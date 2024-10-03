@@ -12,6 +12,7 @@ import {
 import { Loading } from "@components/Loading";
 
 import Groups from "@screens/Groups";
+import NewGroup from "@screens/NewGroup";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,7 +23,7 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        {fontsLoaded ? <Groups /> : <Loading />}
+        {fontsLoaded ? <NewGroup /> : <Loading />}
         <StatusBar
           barStyle="light-content"
           backgroundColor="transparent"
