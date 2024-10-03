@@ -24,7 +24,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         {fontsLoaded ? <Groups /> : <Loading />}
         <StatusBar
-          barStyle="dark-content"
+          barStyle="light-content"
           backgroundColor="transparent"
           translucent
         />
