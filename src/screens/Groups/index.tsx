@@ -21,6 +21,10 @@ export default function Groups() {
     navigation.navigate("new");
   }
 
+  function handleOpenGroups(group: string) {
+    navigation.navigate("players", { group });
+  }
+
   async function fetchGroups() {
     try {
       const data = await groupsGetAll();
@@ -45,7 +49,9 @@ export default function Groups() {
       <FlatList
         data={groups}
         keyExtractor={(item) => item}
-        renderItem={({ item }) => <GroupCard title={item} />}
+        renderItem={({ item }) => (
+          <GroupCard title={item} onPress={() => handleOpenGroups(item)} />
+        )}
         contentContainerStyle={groups.length === 0 && { flex: 1 }}
         ListEmptyComponent={() => (
           <ListEmpty message="Que tal cadastrar a primeira turma?" />
