@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Alert, FlatList } from "react-native";
 import { useRoute } from "@react-navigation/native";
 
+import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
 import { playerAddByGroup } from "@storage/player/playerAddByGroup";
-import { playersGetByGroup } from "@storage/player/playersGetByGroup";
+import { playersGetByGroupAndTeam } from "@storage/player/playerGetByGroupAndTeam";
 import { AppError } from "@utils/AppErros";
 
 import Header from "@components/Header";
@@ -26,8 +27,8 @@ export default function Players() {
   const { group } = route.params as RouteParams;
 
   const [team, setTeam] = useState("TIME A");
-  const [players, setPlayers] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
 
   async function handleAddPlayer() {
     if (newPlayerName.trim().length === 0) {
@@ -44,15 +45,26 @@ export default function Players() {
 
     try {
       await playerAddByGroup(newPlayer, group);
-
-      const players = await playersGetByGroup(group);
-
     } catch (error) {
       if (error instanceof AppError) {
         Alert.alert("Nova Pessoa", error.message);
       } else {
         Alert.alert("Nova Pessoa", "Não foi possível adicionar");
       }
+    }
+  }
+
+  async function fetchPlayersByTeam() {
+    try {
+      const playersByTeam = await playersGetByGroupAndTeam(group, team);
+
+      setPlayers(playersByTeam);
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        "Pessoas",
+        "Não foi possível carregar as pessoas do time selecionado"
+      );
     }
   }
 
