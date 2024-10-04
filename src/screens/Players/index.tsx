@@ -19,6 +19,7 @@ import Input from "@components/Input";
 import Filter from "@components/Filter";
 import PlayerCard from "@components/PlayerCard";
 import ListEmpty from "@components/ListEmpty";
+import { Loading } from "@components/Loading";
 
 import { Container, Form, HeaderList, NumbersOfPlayers } from "./styles";
 
@@ -36,6 +37,7 @@ export default function Players() {
   const [team, setTeam] = useState("TIME A");
   const [newPlayerName, setNewPlayerName] = useState("");
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleActiveTeam = (item: string) => {
     setTeam(item);
@@ -71,16 +73,19 @@ export default function Players() {
   }
 
   async function fetchPlayersByTeam() {
+    setIsLoading(true);
+    
     try {
       const playersByTeam = await playersGetByGroupAndTeam(group, team);
-
+      setIsLoading(false);
       setPlayers(playersByTeam);
     } catch (error) {
-      console.log(error);
       Alert.alert(
         "Pessoas",
         "Não foi possível carregar as pessoas do time selecionado"
       );
+    } finally {
+      setIsLoading(true);
     }
   }
 
@@ -156,7 +161,8 @@ export default function Players() {
         <NumbersOfPlayers>{players.length}</NumbersOfPlayers>
       </HeaderList>
 
-      <FlatList
+    {isLoading ? (<Loading/>) : (
+        <FlatList
         data={players}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
@@ -174,6 +180,7 @@ export default function Players() {
           <ListEmpty message="Não ha pessoas nesse time." />
         )}
       />
+    )}
 
       <Button
         title="Remover turma"

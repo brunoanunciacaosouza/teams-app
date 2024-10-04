@@ -15,7 +15,7 @@ import { Container, Content, Icon } from "./styles";
 
 export default function NewGroup() {
   const navigation = useNavigation();
-
+  
   const [group, setGroup] = useState("");
 
   async function handleNew() {
